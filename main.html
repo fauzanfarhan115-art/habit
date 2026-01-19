@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker - Benerin Hidup Gue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .motivational-quote {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .month-display {
+            font-size: 1.3em;
+            margin-top: 10px;
+            opacity: 0.95;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .streak-fire {
+            font-size: 1.5em;
+            display: inline-block;
+            animation: fire 1s infinite;
+        }
+
+        @keyframes fire {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .templates-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .templates-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .template-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .template-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .template-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .input-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        #habitInput {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        #habitInput:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .time-inputs label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .time-inputs input {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #btnTambah {
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #btnTambah:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+        }
+
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            min-width: 250px;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            font-weight: 500;
+            text-align: left;
+            padding-left: 20px;
+            z-index: 5;
+            border-right: 2px solid #667eea;
+        }
+
+        .habit-name {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .habit-info {
+            flex: 1;
+        }
+
+        .habit-streak {
+            font-size: 0.85em;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .habit-target {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        tbody tr:hover td {
+            background: #f5f5f5;
+        }
+
+        tbody tr:hover td:first-child {
+            background: #f0f0f0;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .today-column {
+            background: #fff9e6 !important;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .reflection-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .reflection-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        #dailyReflection {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        #dailyReflection:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .reflection-saved {
+            color: #27ae60;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .notification-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .notification-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .notification-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 33px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Habit Tracker - Benerin Hidup Gue</h1>
+            <div class="motivational-quote" id="motivationalQuote"></div>
+            <div class="month-display" id="monthDisplay"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalHabits">0</div>
+                <div class="stat-label">Total Habits</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="todayChecked">0</div>
+                <div class="stat-label">Selesai Hari Ini</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completionRate">0%</div>
+                <div class="stat-label">Completion Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number"><span id="longestStreak">0</span> <span class="streak-fire">🔥</span></div>
+                <div class="stat-label">Longest Streak</div>
+            </div>
+        </div>
+
+        <div class="templates-section">
+            <h3>📋 Template Habits (Klik untuk tambah cepat)</h3>
+            <div class="template-buttons">
+                <button class="template-btn" onclick="addTemplate('Tidur sebelum jam 11 malam')">💤 Tidur Teratur</button>
+                <button class="template-btn" onclick="addTemplate('Bangun pagi jam 6')">☀️ Bangun Pagi</button>
+                <button class="template-btn" onclick="addTemplate('Olahraga 30 menit')">💪 Olahraga</button>
+                <button class="template-btn" onclick="addTemplate('Belajar coding 1 jam')">💻 Belajar Coding</button>
+                <button class="template-btn" onclick="addTemplate('Baca buku 30 menit')">📚 Baca Buku</button>
+                <button class="template-btn" onclick="addTemplate('Minum 8 gelas air')">💧 Minum Air</button>
+                <button class="template-btn" onclick="addTemplate('No scrolling brainrot')">📵 No Brainrot</button>
+                <button class="template-btn" onclick="addTemplate('Meditasi 10 menit')">🧘 Meditasi</button>
+            </div>
+        </div>
+
+        <div class="notification-section">
+            <h3>🔔 Reminder Notifications</h3>
+            <div class="notification-toggle">
+                <div class="toggle-switch" id="notifToggle" onclick="toggleNotifications()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span id="notifStatus">Notifications: Off</span>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">Browser akan kirim reminder setiap hari jam 9 pagi & 9 malam</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-row">
+                <input 
+                    type="text" 
+                    id="habitInput" 
+                    placeholder="Habit baru... (contoh: Olahraga 30 menit)"
+                    maxlength="100"
+                >
+                <button id="btnTambah">TAMBAH</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr id="tableHeader">
+                            <th>Habit & Streak</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="100" class="empty-state">
+                                Belum ada habit. Yuk mulai sekarang! 💪
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="reflection-section">
+            <h3>📝 Refleksi Harian (Opsional)</h3>
+            <textarea id="dailyReflection" placeholder="Gimana hari ini? Apa yang bikin susah konsisten? Apa yang bikin semangat?"></textarea>
+            <div class="reflection-saved" id="reflectionSaved">✅ Tersimpan otomatis</div>
+        </div>
+    </div>
+
+    <script>
+        let habits = [];
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let daysInMonth = 0;
+        let notificationsEnabled = false;
+
+        const habitInput = document.getElementById('habitInput');
+        const btnTambah = document.getElementById('btnTambah');
+        const tableHeader = document.getElementById('tableHeader');
+        const tableBody = document.getElementById('tableBody');
+        const monthDisplay = document.getElementById('monthDisplay');
+        const dailyReflection = document.getElementById('dailyReflection');
+
+        const motivationalQuotes = [
+            '"Hari ini gue pilih jadi versi yang lebih baik dari kemarin"',
+            '"Small progress is still progress"',
+            '"Konsistensi > Perfection"',
+            '"Gak ada yang instant, semua butuh proses"',
+            '"Lu bisa, tinggal mau apa nggak"',
+            '"Every day is a new chance to start over"',
+            '"Discipline beats motivation"'
+        ];
+
+        function init() {
+            loadFromStorage();
+            calculateDaysInMonth();
+            createHeader();
+            renderHabits();
+            updateStats();
+            updateMonthDisplay();
+            showRandomQuote();
+            loadReflection();
+            checkNotificationPermission();
+            setupAutoSaveReflection();
+        }
+
+        function showRandomQuote() {
+            const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            document.getElementById('motivationalQuote').textContent = quote;
+        }
+
+        function calculateDaysInMonth() {
+            daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        }
+
+        function updateMonthDisplay() {
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            monthDisplay.textContent = `${months[currentMonth]} ${currentYear}`;
+        }
+
+        function createHeader() {
+            const today = new Date().getDate();
+            tableHeader.innerHTML = '<th>Habit & Streak</th>';
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const th = document.createElement('th');
+                th.textContent = day;
+                if (day === today) {
+                    th.style.background = '#FFD700';
+                    th.style.color = '#333';
+                }
+                tableHeader.appendChild(th);
+            }
+        }
+
+        function addTemplate(habitName) {
+            habitInput.value = habitName;
+            habitInput.focus();
+        }
+
+        function addHabit() {
+            const habitName = habitInput.value.trim();
+            
+            if (habitName === '') {
+                alert('Isi dulu habitnya bro! 💪');
+                return;
+            }
+
+            const newHabit = {
+                id: Date.now(),
+                name: habitName,
+                checks: {},
+                createdAt: new Date().toISOString()
+            };
+
+            habits.push(newHabit);
+            habitInput.value = '';
+            
+            saveToStorage();
+            renderHabits();
+            updateStats();
+        }
+
+        function deleteHabit(id) {
+            if (confirm('Yakin mau hapus habit ini?')) {
+                habits = habits.filter(h => h.id !== id);
+                saveToStorage();
+                renderHabits();
+                updateStats();
+            }
+        }
+
+        function toggleCheck(habitId, day) {
+            const habit = habits.find(h => h.id === habitId);
+            if (habit) {
+                if (habit.checks[day]) {
+                    delete habit.checks[day];
+                } else {
+                    habit.checks[day] = true;
+                }
+                saveToStorage();
+                renderHabits();
+                updateStats();
+            }
+        }
+
+        function calculateStreak(habit) {
+            const today = new Date().getDate();
+            let streak = 0;
+            
+            for (let day = today; day >= 1; day--) {
+                if (habit.checks[day]) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function renderHabits() {
+            if (habits.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="${daysInMonth + 1}" class="empty-state">
+                            Belum ada habit. Yuk mulai sekarang! 💪
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const today = new Date().getDate();
+            tableBody.innerHTML = '';
+
+            habits.forEach(habit => {
+                const row = document.createElement('tr');
+                const streak = calculateStreak(habit);
+
+                const nameCell = document.createElement('td');
+                nameCell.innerHTML = `
+                    <div class="habit-name">
+                        <div class="habit-info">
+                            <div>${habit.name}</div>
+                            ${streak > 0 ? `<div class="habit-streak">🔥 ${streak} hari streak!</div>` : ''}
+                        </div>
+                        <button class="delete-btn" onclick="deleteHabit(${habit.id})">Hapus</button>
+                    </div>
+                `;
+                row.appendChild(nameCell);
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cell = document.createElement('td');
+                    if (day === today) {
+                        cell.classList.add('today-column');
+                    }
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = habit.checks[day] || false;
+                    checkbox.onchange = () => toggleCheck(habit.id, day);
+                    cell.appendChild(checkbox);
+                    row.appendChild(cell);
+                }
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateStats() {
+            const today = new Date().getDate();
+            
+            document.getElementById('totalHabits').textContent = habits.length;
+
+            let checkedToday = 0;
+            let longestStreak = 0;
+
+            habits.forEach(habit => {
+                if (habit.checks[today]) {
+                    checkedToday++;
+                }
+                const streak = calculateStreak(habit);
+                if (streak > longestStreak) {
+                    longestStreak = streak;
+                }
+            });
+
+            document.getElementById('todayChecked').textContent = checkedToday;
+            document.getElementById('longestStreak').textContent = longestStreak;
+
+            const rate = habits.length > 0 ? Math.round((checkedToday / habits.length) * 100) : 0;
+            document.getElementById('completionRate').textContent = rate + '%';
+        }
+
+        function saveToStorage() {
+            const data = {
+                habits: habits,
+                month: currentMonth,
+                year: currentYear
+            };
+            localStorage.setItem('habitTrackerUltimate', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const stored = localStorage.getItem('habitTrackerUltimate');
+            if (stored) {
+                const data = JSON.parse(stored);
+                
+                const now = new Date();
+                if (data.month !== now.getMonth() || data.year !== now.getFullYear()) {
+                    data.habits.forEach(h => h.checks = {});
+                    currentMonth = now.getMonth();
+                    currentYear = now.getFullYear();
+                } else {
+                    currentMonth = data.month;
+                    currentYear = data.year;
+                }
+                
+                habits = data.habits || [];
+            }
+        }
+
+        function setupAutoSaveReflection() {
+            let timeout;
+            dailyReflection.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    saveReflection();
+                }, 1000);
+            });
+        }
+
+        function saveReflection() {
+            const today = new Date().toDateString();
+            const reflections = JSON.parse(localStorage.getItem('dailyReflections') || '{}');
+            reflections[today] = dailyReflection.value;
+            localStorage.setItem('dailyReflections', JSON.stringify(reflections));
+            
+            const saved = document.getElementById('reflectionSaved');
+            saved.style.display = 'block';
+            setTimeout(() => {
+                saved.style.display = 'none';
+            }, 2000);
+        }
+
+        function loadReflection() {
+            const today = new Date().toDateString();
+            const reflections = JSON.parse(localStorage.getItem('dailyReflections') || '{}');
+            dailyReflection.value = reflections[today] || '';
+        }
+
+        function toggleNotifications() {
+            const toggle = document.getElementById('notifToggle');
+            const status = document.getElementById('notifStatus');
+            
+            if (!notificationsEnabled) {
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            notificationsEnabled = true;
+                            toggle.classList.add('active');
+                            status.textContent = 'Notifications: On ✅';
+                            scheduleNotifications();
+                            localStorage.setItem('notificationsEnabled', 'true');
+                        } else {
+                            alert('Izinkan notifikasi di browser settings untuk aktifkan reminder!');
+                        }
+                    });
+                }
+            } else {
+                notificationsEnabled = false;
+                toggle.classList.remove('active');
+                status.textContent = 'Notifications: Off';
+                localStorage.setItem('notificationsEnabled', 'false');
+            }
+        }
+
+        function checkNotificationPermission() {
+            const enabled = localStorage.getItem('notificationsEnabled') === 'true';
+            if (enabled && Notification.permission === 'granted') {
+                notificationsEnabled = true;
+                document.getElementById('notifToggle').classList.add('active');
+                document.getElementById('notifStatus').textContent = 'Notifications: On ✅';
+                scheduleNotifications();
+            }
+        }
+
+        function scheduleNotifications() {
+            const now = new Date();
+            const morning = new Date();
+            morning.setHours(9, 0, 0, 0);
+            
+            const evening = new Date();
+            evening.setHours(21, 0, 0, 0);
+
+            if (now < morning) {
+                setTimeout(() => showNotification('morning'), morning - now);
+            }
+            
+            if (now < evening) {
+                setTimeout(() => showNotification('evening'), evening - now);
+            }
+
+            setInterval(() => {
+                const currentTime = new Date();
+                if (currentTime.getHours() === 9 && currentTime.getMinutes() === 0) {
+                    showNotification('morning');
+                }
+                if (currentTime.getHours() === 21 && currentTime.getMinutes() === 0) {
+                    showNotification('evening');
+                }
+            }, 60000);
+        }
+
+        function showNotification(type) {
+            if (!notificationsEnabled || Notification.permission !== 'granted') return;
+
+            const messages = {
+                morning: {
+                    title: '☀️ Selamat Pagi!',
+                    body: 'Yuk check habit tracker lu! Hari ini mau benerin apa?'
+                },
+                evening: {
+                    title: '🌙 Udah Malam Nih!',
+                    body: 'Jangan lupa isi habit tracker hari ini ya! Gimana progress lu?'
+                }
+            };
+
+            new Notification(messages[type].title, {
+                body: messages[type].body,
+                icon: '🎯'
+            });
+        }
+
+        btnTambah.addEventListener('click', addHabit);
+        habitInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addHabit();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
