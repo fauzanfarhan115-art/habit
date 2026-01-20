@@ -882,54 +882,58 @@
             return streak;
         }
 
-        function renderHabits() {
-            if (habits.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="${daysInMonth + 1}" class="empty-state">
-                            Belum ada habit. Yuk mulai sekarang! 💪
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+function renderHabits() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    
+    const today = new Date().getDate(); // Ambil tanggal hari ini (1-31)
 
-            const today = new Date().getDate();
-            tableBody.innerHTML = '';
+    habits.forEach(habit => {
+        const tr = document.createElement('tr');
+        const streak = calculateStreak(habit);
+        
+        let tdName = `<td>
+            <div class="habit-name-text">${habit.name}</div>
+            <div style="font-size:10px; color: #ff6b6b; font-weight: bold;">🔥 ${streak} Hari Streak</div>
+            <button class="delete-btn" onclick="deleteHabit(${habit.id})" style="margin-top: 5px;">Hapus</button>
+        </td>`;
+        
+        tr.innerHTML = tdName;
+        
+        for (let d = 1; d <= daysInMonth; d++) {
+            const td = document.createElement('td');
+            if (d === today) td.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
 
-            habits.forEach(habit => {
-                const row = document.createElement('tr');
-                const streak = calculateStreak(habit);
-
-                const nameCell = document.createElement('td');
-                nameCell.innerHTML = `
-                    <div class="habit-name">
-                        <div class="habit-info">
-                            <div>${habit.name}</div>
-                            ${streak > 0 ? `<div class="habit-streak">🔥 ${streak} hari streak!</div>` : ''}
-                        </div>
-                        <button class="delete-btn" onclick="deleteHabit(${habit.id})">Hapus</button>
-                    </div>
-                `;
-                row.appendChild(nameCell);
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const cell = document.createElement('td');
-                    if (day === today) {
-                        cell.classList.add('today-column');
-                    }
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.checked = habit.checks[day] || false;
-                    checkbox.onchange = () => toggleCheck(habit.id, day);
-                    cell.appendChild(checkbox);
-                    row.appendChild(cell);
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = habit.checks[d] || false;
+            
+            // --- LOGIKA PENGUNCIAN ---
+            if (d === today) {
+                // Hari ini: Bisa di-edit
+                cb.onchange = () => toggleCheck(habit.id, d);
+            } else {
+                // Hari lewat atau hari depan: Kunci!
+                cb.disabled = true;
+                cb.style.cursor = 'not-allowed';
+                cb.style.opacity = '0.6';
+                
+                // Tambahkan title biar lo tahu kenapa dikunci
+                if (d < today) {
+                    cb.title = "Masa lalu tidak bisa diubah. Disiplinlah tepat waktu!";
+                } else {
+                    cb.title = "Belum waktunya. Fokus ke hari ini!";
                 }
-
-                tableBody.appendChild(row);
-            });
+            }
+            
+            td.appendChild(cb);
+            tr.appendChild(td);
         }
+        tbody.appendChild(tr);
+    });
+}
 
+        
         function updateStats() {
             const today = new Date().getDate();
             
