@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Trophy, Flame, Star, Zap, TrendingUp, Award, Target, Plus, X, BarChart3, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trophy, Flame, Star, Zap, Target, Plus, X } from 'lucide-react';
 
 const AdictiveHabitTracker = () => {
   const [habits, setHabits] = useState([
-    { id: 1, name: 'Bangun Pagi', icon: '🌅', color: 'from-slate-600 to-slate-700', xp: 50 },
-    { id: 2, name: 'Olahraga', icon: '💪', color: 'from-slate-600 to-slate-700', xp: 100 },
-    { id: 3, name: 'Baca Buku', icon: '📚', color: 'from-slate-600 to-slate-700', xp: 75 },
+    { id: 1, name: 'Bangun Pagi', icon: '🌅', xp: 50 },
+    { id: 2, name: 'Olahraga', icon: '💪', xp: 100 },
+    { id: 3, name: 'Baca Buku', icon: '📚', xp: 75 },
   ]);
 
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [completedHabits, setCompletedHabits] = useState({});
-  const [streak, setStreak] = useState(7);
+  const [streak] = useState(7);
   const [totalXP, setTotalXP] = useState(2450);
   const [level, setLevel] = useState(5);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showAddHabit, setShowAddHabit] = useState(false);
   const [newHabit, setNewHabit] = useState({ name: '', icon: '✨', xp: 50 });
-  const [viewMode, setViewMode] = useState('daily'); // daily, weekly, monthly
+  const [viewMode, setViewMode] = useState('weekly');
   const [showLevelUp, setShowLevelUp] = useState(false);
 
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Oct', 'Nov', 'Des'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
   const emojiOptions = ['🌅', '💪', '📚', '🧘', '💻', '🎯', '🏃', '💤', '🍎', '💧', '🎨', '✍️', '🎵', '🧠', '📝'];
 
   const getDateKey = (date) => {
@@ -35,7 +35,6 @@ const AdictiveHabitTracker = () => {
     const habitKey = `${todayKey}-${habitId}`;
     
     if (completedHabits[habitKey]) {
-      // Uncheck
       const newCompleted = { ...completedHabits };
       delete newCompleted[habitKey];
       setCompletedHabits(newCompleted);
@@ -43,7 +42,6 @@ const AdictiveHabitTracker = () => {
       const habit = habits.find(h => h.id === habitId);
       setTotalXP(totalXP - habit.xp);
     } else {
-      // Check
       const habit = habits.find(h => h.id === habitId);
       const newXP = totalXP + habit.xp;
       const newLevel = Math.floor(newXP / 500) + 1;
@@ -68,7 +66,6 @@ const AdictiveHabitTracker = () => {
         id: Date.now(),
         name: newHabit.name,
         icon: newHabit.icon,
-        color: 'from-slate-600 to-slate-700',
         xp: parseInt(newHabit.xp)
       }]);
       setNewHabit({ name: '', icon: '✨', xp: 50 });
@@ -191,7 +188,6 @@ const AdictiveHabitTracker = () => {
       )}
 
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -219,7 +215,6 @@ const AdictiveHabitTracker = () => {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
             <div className="flex items-center gap-2 mb-2">
@@ -259,7 +254,6 @@ const AdictiveHabitTracker = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Left Column - Habits */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
@@ -359,7 +353,6 @@ const AdictiveHabitTracker = () => {
               </div>
             </div>
 
-            {/* Calendar View */}
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-slate-800">Kalender</h2>
@@ -429,9 +422,7 @@ const AdictiveHabitTracker = () => {
             </div>
           </div>
 
-          {/* Right Column - Charts */}
           <div className="space-y-6">
-            {/* View Mode Toggle */}
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <div className="flex gap-2">
                 <button
@@ -457,7 +448,6 @@ const AdictiveHabitTracker = () => {
               </div>
             </div>
 
-            {/* Weekly Chart */}
             {viewMode === 'weekly' && (
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <h3 className="text-lg font-bold text-slate-800 mb-4">Progress 7 Hari</h3>
@@ -480,7 +470,6 @@ const AdictiveHabitTracker = () => {
               </div>
             )}
 
-            {/* Monthly Chart */}
             {viewMode === 'monthly' && (
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <h3 className="text-lg font-bold text-slate-800 mb-4">Progress 12 Bulan</h3>
@@ -503,7 +492,6 @@ const AdictiveHabitTracker = () => {
               </div>
             )}
 
-            {/* Motivational Box */}
             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg shadow-lg p-6 text-white">
               <div className="text-4xl mb-3">🎯</div>
               <div className="font-bold text-lg mb-2">Keep Going!</div>
