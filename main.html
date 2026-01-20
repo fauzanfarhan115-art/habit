@@ -1,1319 +1,521 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Tracker - Benerin Hidup Gue</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #080b0d;
-            background: linear-gradient(90deg,rgba(8, 11, 13, 1) 0%, rgba(36, 79, 56, 1) 38%, rgba(71, 158, 94, 1) 65%, rgba(122, 115, 48, 1) 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .motivational-quote {
-            font-size: 1.1em;
-            opacity: 0.95;
-            font-style: italic;
-            margin-top: 10px;
-        }
-
-        .month-display {
-            font-size: 1.3em;
-            margin-top: 10px;
-            opacity: 0.95;
-        }
-
-        .stats {
-            background: rgba(255,255,255,0.95);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 10px;
-        }
-
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .streak-fire {
-            font-size: 1.5em;
-            display: inline-block;
-            animation: fire 1s infinite;
-        }
-
-        @keyframes fire {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .templates-section {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .templates-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .template-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .template-btn {
-            padding: 10px 20px;
-            background: #f0f0f0;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .template-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .input-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 25px;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        #habitInput {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #667eea;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        #habitInput:focus {
-            outline: none;
-            border-color: #764ba2;
-            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
-        }
-
-        .time-inputs {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .time-inputs label {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .time-inputs input {
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        #btnTambah {
-            padding: 15px 35px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        #btnTambah:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .table-wrapper {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        thead {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 10px;
-            text-align: center;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.1);
-            font-size: 14px;
-        }
-
-        th:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 11;
-            min-width: 250px;
-            text-align: left;
-            padding-left: 20px;
-        }
-
-        td {
-            padding: 12px 10px;
-            text-align: center;
-            border: 1px solid #e0e0e0;
-            transition: background 0.2s;
-        }
-
-        td:first-child {
-            position: sticky;
-            left: 0;
-            background: white;
-            font-weight: 500;
-            text-align: left;
-            padding-left: 20px;
-            z-index: 5;
-            border-right: 2px solid #667eea;
-        }
-
-        .habit-name {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .habit-info {
-            flex: 1;
-        }
-
-        .habit-streak {
-            font-size: 0.85em;
-            color: #ff6b6b;
-            font-weight: bold;
-            margin-top: 3px;
-        }
-
-        .habit-target {
-            font-size: 0.75em;
-            color: #999;
-            margin-top: 2px;
-        }
-
-        tbody tr:hover td {
-            background: #f5f5f5;
-        }
-
-        tbody tr:hover td:first-child {
-            background: #f0f0f0;
-        }
-
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
-
-        .today-column {
-            background: #fff9e6 !important;
-        }
-
-        .delete-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-            margin-left: 10px;
-        }
-
-        .delete-btn:hover {
-            background: #c0392b;
-        }
-
-        .reflection-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .reflection-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        #dailyReflection {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        #dailyReflection:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .reflection-saved {
-            color: #27ae60;
-            font-size: 0.9em;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .analytics-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .analytics-section h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .chart-container {
-            margin: 20px 0;
-        }
-
-        .chart-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .bar-chart {
-            display: flex;
-            align-items: flex-end;
-            height: 200px;
-            gap: 10px;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-        }
-
-        .bar {
-            flex: 1;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            border-radius: 5px 5px 0 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .bar:hover {
-            opacity: 0.8;
-            transform: translateY(-5px);
-        }
-
-        .bar-value {
-            position: absolute;
-            top: -25px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .bar-label {
-            margin-top: 5px;
-            font-size: 11px;
-            color: #666;
-        }
-
-        .weekly-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .summary-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .summary-card .number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .summary-card .label {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .export-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .export-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .export-btn {
-            padding: 12px 25px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .export-btn:hover {
-            background: #229954;
-            transform: translateY(-2px);
-        }
-
-        .share-section {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .share-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .share-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-
-        .share-card .big-number {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .share-card .description {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .share-btn {
-            padding: 12px 25px;
-            background: white;
-            color: #667eea;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .share-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .achievement-badge {
-            display: inline-block;
-            background: #FFD700;
-            color: #333;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin: 5px;
-        }
-
-        .notification-section {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .notification-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .notification-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #ccc;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .toggle-switch.active {
-            background: #667eea;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: left 0.3s;
-        }
-
-        .toggle-switch.active .toggle-slider {
-            left: 33px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-            font-size: 18px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .input-row {
-                flex-direction: column;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎯 Habit Tracker - Benerin Hidup Gue</h1>
-            <div class="motivational-quote" id="motivationalQuote"></div>
-            <div class="month-display" id="monthDisplay"></div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number" id="totalHabits">0</div>
-                <div class="stat-label">Total Habits</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="todayChecked">0</div>
-                <div class="stat-label">Selesai Hari Ini</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="completionRate">0%</div>
-                <div class="stat-label">Completion Rate</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number"><span id="longestStreak">0</span> <span class="streak-fire">🔥</span></div>
-                <div class="stat-label">Longest Streak</div>
-            </div>
-        </div>
-
-        <div class="templates-section">
-            <h3>📋 Template Habits (Klik untuk tambah cepat)</h3>
-            <div class="template-buttons">
-                <button class="template-btn" onclick="addTemplate('Tidur sebelum jam 11 malam')">💤 Tidur Teratur</button>
-                <button class="template-btn" onclick="addTemplate('Bangun pagi jam 6')">☀️ Bangun Pagi</button>
-                <button class="template-btn" onclick="addTemplate('Olahraga 30 menit')">💪 Olahraga</button>
-                <button class="template-btn" onclick="addTemplate('Belajar coding 1 jam')">💻 Belajar Coding</button>
-                <button class="template-btn" onclick="addTemplate('Baca buku 30 menit')">📚 Baca Buku</button>
-                <button class="template-btn" onclick="addTemplate('Minum 8 gelas air')">💧 Minum Air</button>
-                <button class="template-btn" onclick="addTemplate('No scrolling brainrot')">📵 No Brainrot</button>
-                <button class="template-btn" onclick="addTemplate('Meditasi 10 menit')">🧘 Meditasi</button>
-            </div>
-        </div>
-
-        <div class="notification-section">
-            <h3>🔔 Reminder Notifications</h3>
-            <div class="notification-toggle">
-                <div class="toggle-switch" id="notifToggle" onclick="toggleNotifications()">
-                    <div class="toggle-slider"></div>
-                </div>
-                <span id="notifStatus">Notifications: Off</span>
-            </div>
-            <p style="font-size: 0.9em; color: #666;">Browser akan kirim reminder setiap hari jam 9 pagi & 9 malam</p>
-        </div>
-
-        <div class="input-section">
-            <div class="input-row">
-                <input 
-                    type="text" 
-                    id="habitInput" 
-                    placeholder="Habit baru... (contoh: Olahraga 30 menit)"
-                    maxlength="100"
-                >
-                <button id="btnTambah">TAMBAH</button>
-            </div>
-        </div>
-
-        <div class="table-wrapper">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr id="tableHeader">
-                            <th>Habit & Streak</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr>
-                            <td colspan="100" class="empty-state">
-                                Belum ada habit. Yuk mulai sekarang! 💪
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="reflection-section">
-            <h3>📝 Refleksi Harian (Opsional)</h3>
-            <textarea id="dailyReflection" placeholder="Gimana hari ini? Apa yang bikin susah konsisten? Apa yang bikin semangat?"></textarea>
-            <div class="reflection-saved" id="reflectionSaved">✅ Tersimpan otomatis</div>
-        </div>
-
-        <div class="analytics-section">
-            <h3>📊 Analytics & Progress</h3>
-            
-            <div class="weekly-summary">
-                <div class="summary-card">
-                    <div class="number" id="weeklyCompletion">0%</div>
-                    <div class="label">Completion Minggu Ini</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number" id="bestDay">-</div>
-                    <div class="label">Hari Terbaik</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number" id="totalCompleted">0</div>
-                    <div class="label">Total Habits Selesai</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number" id="averageStreak">0</div>
-                    <div class="label">Average Streak</div>
-                </div>
-            </div>
-
-            <div class="chart-container">
-                <div class="chart-title">📈 7 Hari Terakhir</div>
-                <div class="bar-chart" id="weeklyChart"></div>
-            </div>
-
-            <div id="achievementsBadges" style="margin-top: 20px;">
-                <div class="chart-title">🏆 Achievements</div>
-            </div>
-        </div>
-
-        <div class="export-section">
-            <h3>💾 Export & Backup</h3>
-            <p style="margin-bottom: 15px; color: #666;">Download progress lu buat backup atau analisis lebih lanjut</p>
-            <div class="export-buttons">
-                <button class="export-btn" onclick="exportToJSON()">📥 Download JSON</button>
-                <button class="export-btn" onclick="exportToCSV()">📊 Download CSV</button>
-                <button class="export-btn" onclick="exportScreenshot()">📸 Screenshot Progress</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let habits = [];
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-        let daysInMonth = 0;
-        let notificationsEnabled = false;
-
-        const habitInput = document.getElementById('habitInput');
-        const btnTambah = document.getElementById('btnTambah');
-        const tableHeader = document.getElementById('tableHeader');
-        const tableBody = document.getElementById('tableBody');
-        const monthDisplay = document.getElementById('monthDisplay');
-        const dailyReflection = document.getElementById('dailyReflection');
-
-        const motivationalQuotes = [
-            '"Hari ini gue pilih jadi versi yang lebih baik dari kemarin"',
-            '"Small progress is still progress"',
-            '"Konsistensi > Perfection"',
-            '"Gak ada yang instant, semua butuh proses"',
-            '"Lu bisa, tinggal mau apa nggak"',
-            '"Every day is a new chance to start over"',
-            '"Discipline beats motivation"'
-        ];
-
-        function init() {
-            loadFromStorage();
-            calculateDaysInMonth();
-            createHeader();
-            renderHabits();
-            updateStats();
-            updateMonthDisplay();
-            showRandomQuote();
-            loadReflection();
-            checkNotificationPermission();
-            setupAutoSaveReflection();
-            updateAnalytics();
-            updateShareCard();
-        }
-
-        function showRandomQuote() {
-            const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-            document.getElementById('motivationalQuote').textContent = quote;
-        }
-
-        function calculateDaysInMonth() {
-            daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        }
-
-        function updateMonthDisplay() {
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            monthDisplay.textContent = `${months[currentMonth]} ${currentYear}`;
-        }
-
-        function createHeader() {
-            const today = new Date().getDate();
-            tableHeader.innerHTML = '<th>Habit & Streak</th>';
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const th = document.createElement('th');
-                th.textContent = day;
-                if (day === today) {
-                    th.style.background = '#FFD700';
-                    th.style.color = '#333';
-                }
-                tableHeader.appendChild(th);
-            }
-        }
-
-        function addTemplate(habitName) {
-            habitInput.value = habitName;
-            habitInput.focus();
-        }
-
-        function addHabit() {
-            const habitName = habitInput.value.trim();
-            
-            if (habitName === '') {
-                alert('Isi dulu habitnya bro! 💪');
-                return;
-            }
-
-            const newHabit = {
-                id: Date.now(),
-                name: habitName,
-                checks: {},
-                createdAt: new Date().toISOString()
-            };
-
-            habits.push(newHabit);
-            habitInput.value = '';
-            
-            saveToStorage();
-            renderHabits();
-            updateStats();
-            updateAnalytics();
-            updateShareCard();
-        }
-
-        function deleteHabit(id) {
-            if (confirm('Yakin mau hapus habit ini?')) {
-                habits = habits.filter(h => h.id !== id);
-                saveToStorage();
-                renderHabits();
-                updateStats();
-                updateAnalytics();
-                updateShareCard();
-            }
-        }
-
-        function toggleCheck(habitId, day) {
-            const habit = habits.find(h => h.id === habitId);
-            if (habit) {
-                if (habit.checks[day]) {
-                    delete habit.checks[day];
-                } else {
-                    habit.checks[day] = true;
-                }
-                saveToStorage();
-                renderHabits();
-                updateStats();
-            }
-        }
-
-        function calculateStreak(habit) {
-            const today = new Date().getDate();
-            let streak = 0;
-            
-            for (let day = today; day >= 1; day--) {
-                if (habit.checks[day]) {
-                    streak++;
-                } else {
-                    break;
-                }
-            }
-            
-            return streak;
-        }
-
-function renderHabits() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
+import React, { useState, useEffect } from 'react';
+import { Trophy, Flame, Star, Zap, TrendingUp, Award, Target, Plus, X, BarChart3, Calendar } from 'lucide-react';
+
+const AdictiveHabitTracker = () => {
+  const [habits, setHabits] = useState([
+    { id: 1, name: 'Bangun Pagi', icon: '🌅', color: 'from-slate-600 to-slate-700', xp: 50 },
+    { id: 2, name: 'Olahraga', icon: '💪', color: 'from-slate-600 to-slate-700', xp: 100 },
+    { id: 3, name: 'Baca Buku', icon: '📚', color: 'from-slate-600 to-slate-700', xp: 75 },
+  ]);
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [completedHabits, setCompletedHabits] = useState({});
+  const [streak, setStreak] = useState(7);
+  const [totalXP, setTotalXP] = useState(2450);
+  const [level, setLevel] = useState(5);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showAddHabit, setShowAddHabit] = useState(false);
+  const [newHabit, setNewHabit] = useState({ name: '', icon: '✨', xp: 50 });
+  const [viewMode, setViewMode] = useState('daily'); // daily, weekly, monthly
+  const [showLevelUp, setShowLevelUp] = useState(false);
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Oct', 'Nov', 'Des'];
+  const emojiOptions = ['🌅', '💪', '📚', '🧘', '💻', '🎯', '🏃', '💤', '🍎', '💧', '🎨', '✍️', '🎵', '🧠', '📝'];
+
+  const getDateKey = (date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  };
+
+  const getTodayKey = () => getDateKey(currentDate);
+
+  const handleHabitClick = (habitId) => {
+    const todayKey = getTodayKey();
+    const habitKey = `${todayKey}-${habitId}`;
     
-    const today = new Date().getDate(); // Ambil tanggal hari ini (1-31)
+    if (completedHabits[habitKey]) {
+      // Uncheck
+      const newCompleted = { ...completedHabits };
+      delete newCompleted[habitKey];
+      setCompletedHabits(newCompleted);
+      
+      const habit = habits.find(h => h.id === habitId);
+      setTotalXP(totalXP - habit.xp);
+    } else {
+      // Check
+      const habit = habits.find(h => h.id === habitId);
+      const newXP = totalXP + habit.xp;
+      const newLevel = Math.floor(newXP / 500) + 1;
+      
+      setCompletedHabits({ ...completedHabits, [habitKey]: true });
+      setTotalXP(newXP);
+      setShowConfetti(true);
 
-    habits.forEach(habit => {
-        const tr = document.createElement('tr');
-        const streak = calculateStreak(habit);
-        
-        let tdName = `<td>
-            <div class="habit-name-text">${habit.name}</div>
-            <div style="font-size:10px; color: #ff6b6b; font-weight: bold;">🔥 ${streak} Hari Streak</div>
-            <button class="delete-btn" onclick="deleteHabit(${habit.id})" style="margin-top: 5px;">Hapus</button>
-        </td>`;
-        
-        tr.innerHTML = tdName;
-        
-        for (let d = 1; d <= daysInMonth; d++) {
-            const td = document.createElement('td');
-            if (d === today) td.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+      if (newLevel > level) {
+        setLevel(newLevel);
+        setShowLevelUp(true);
+        setTimeout(() => setShowLevelUp(false), 2000);
+      }
 
-            const cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.checked = habit.checks[d] || false;
-            
-            // --- LOGIKA PENGUNCIAN ---
-            if (d === today) {
-                // Hari ini: Bisa di-edit
-                cb.onchange = () => toggleCheck(habit.id, d);
-            } else {
-                // Hari lewat atau hari depan: Kunci!
-                cb.disabled = true;
-                cb.style.cursor = 'not-allowed';
-                cb.style.opacity = '0.6';
-                
-                // Tambahkan title biar lo tahu kenapa dikunci
-                if (d < today) {
-                    cb.title = "Masa lalu tidak bisa diubah. Disiplinlah tepat waktu!";
-                } else {
-                    cb.title = "Belum waktunya. Fokus ke hari ini!";
-                }
-            }
-            
-            td.appendChild(cb);
-            tr.appendChild(td);
+      setTimeout(() => setShowConfetti(false), 1500);
+    }
+  };
+
+  const addHabit = () => {
+    if (newHabit.name.trim()) {
+      setHabits([...habits, {
+        id: Date.now(),
+        name: newHabit.name,
+        icon: newHabit.icon,
+        color: 'from-slate-600 to-slate-700',
+        xp: parseInt(newHabit.xp)
+      }]);
+      setNewHabit({ name: '', icon: '✨', xp: 50 });
+      setShowAddHabit(false);
+    }
+  };
+
+  const deleteHabit = (habitId) => {
+    setHabits(habits.filter(h => h.id !== habitId));
+  };
+
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getMonthCalendar = () => {
+    const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
+    const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+    const days = [];
+    
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(selectedYear, selectedMonth, day);
+      const dateKey = getDateKey(date);
+      const completed = habits.filter(h => completedHabits[`${dateKey}-${h.id}`]).length;
+      days.push({ day, completed, total: habits.length, date });
+    }
+    
+    return days;
+  };
+
+  const getWeeklyData = () => {
+    const weekData = [];
+    const today = new Date(currentDate);
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateKey = getDateKey(date);
+      const completed = habits.filter(h => completedHabits[`${dateKey}-${h.id}`]).length;
+      weekData.push({
+        day: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][date.getDay()],
+        completed,
+        total: habits.length,
+        percentage: habits.length > 0 ? Math.round((completed / habits.length) * 100) : 0
+      });
+    }
+    
+    return weekData;
+  };
+
+  const getMonthlyData = () => {
+    const monthData = [];
+    const year = currentDate.getFullYear();
+    
+    for (let month = 0; month < 12; month++) {
+      const daysInMonth = getDaysInMonth(month, year);
+      let totalCompleted = 0;
+      let totalPossible = 0;
+      
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        if (date <= currentDate) {
+          const dateKey = getDateKey(date);
+          totalCompleted += habits.filter(h => completedHabits[`${dateKey}-${h.id}`]).length;
+          totalPossible += habits.length;
         }
-        tbody.appendChild(tr);
-    });
-}
+      }
+      
+      monthData.push({
+        month: months[month],
+        percentage: totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0
+      });
+    }
+    
+    return monthData;
+  };
 
-        
-        function updateStats() {
-            const today = new Date().getDate();
-            
-            document.getElementById('totalHabits').textContent = habits.length;
+  const Confetti = () => {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute animate-ping"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 0.3}s`,
+              animationDuration: `${0.8 + Math.random() * 0.5}s`
+            }}
+          >
+            {['⭐', '✨', '🔥'][Math.floor(Math.random() * 3)]}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
-            let checkedToday = 0;
-            let longestStreak = 0;
+  const todayKey = getTodayKey();
+  const completedToday = habits.filter(h => completedHabits[`${todayKey}-${h.id}`]).length;
+  const completionRate = habits.length > 0 ? Math.round((completedToday / habits.length) * 100) : 0;
 
-            habits.forEach(habit => {
-                if (habit.checks[today]) {
-                    checkedToday++;
-                }
-                const streak = calculateStreak(habit);
-                if (streak > longestStreak) {
-                    longestStreak = streak;
-                }
-            });
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
+      {showConfetti && <Confetti />}
+      
+      {showLevelUp && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 rounded-xl animate-bounce shadow-2xl">
+            <div className="text-4xl font-bold text-white text-center">
+              LEVEL UP! 🎊
+              <div className="text-2xl mt-1">Level {level}</div>
+            </div>
+          </div>
+        </div>
+      )}
 
-            document.getElementById('todayChecked').textContent = checkedToday;
-            document.getElementById('longestStreak').textContent = longestStreak;
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-1">
+                Habit Tracker
+              </h1>
+              <p className="text-slate-600">Konsisten adalah kunci kesuksesan</p>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-2 justify-end mb-1">
+                <Target className="text-emerald-600" size={24} />
+                <span className="text-2xl font-bold text-slate-800">Level {level}</span>
+              </div>
+              <div className="text-slate-600 text-sm">
+                {totalXP} / {(level) * 500} XP
+              </div>
+            </div>
+          </div>
 
-            const rate = habits.length > 0 ? Math.round((checkedToday / habits.length) * 100) : 0;
-            document.getElementById('completionRate').textContent = rate + '%';
-        }
+          <div className="bg-white rounded-lg h-4 overflow-hidden border border-slate-200 shadow-sm">
+            <div 
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+              style={{ width: `${((totalXP % 500) / 500) * 100}%` }}
+            />
+          </div>
+        </div>
 
-        function saveToStorage() {
-            const data = {
-                habits: habits,
-                month: currentMonth,
-                year: currentYear
-            };
-            localStorage.setItem('habitTrackerUltimate', JSON.stringify(data));
-        }
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Flame size={20} className="text-orange-500" />
+              <span className="text-slate-600 text-sm font-medium">Streak</span>
+            </div>
+            <div className="text-3xl font-bold text-slate-800">{streak}</div>
+            <div className="text-slate-500 text-xs">hari beruntun</div>
+          </div>
 
-        function loadFromStorage() {
-            const stored = localStorage.getItem('habitTrackerUltimate');
-            if (stored) {
-                const data = JSON.parse(stored);
-                
-                const now = new Date();
-                if (data.month !== now.getMonth() || data.year !== now.getFullYear()) {
-                    data.habits.forEach(h => h.checks = {});
-                    currentMonth = now.getMonth();
-                    currentYear = now.getFullYear();
-                } else {
-                    currentMonth = data.month;
-                    currentYear = data.year;
-                }
-                
-                habits = data.habits || [];
-            }
-        }
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Star size={20} className="text-emerald-500" />
+              <span className="text-slate-600 text-sm font-medium">Hari Ini</span>
+            </div>
+            <div className="text-3xl font-bold text-slate-800">{completedToday}/{habits.length}</div>
+            <div className="text-slate-500 text-xs">{completionRate}% selesai</div>
+          </div>
 
-        function setupAutoSaveReflection() {
-            let timeout;
-            dailyReflection.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    saveReflection();
-                }, 1000);
-            });
-        }
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap size={20} className="text-amber-500" />
+              <span className="text-slate-600 text-sm font-medium">Total XP</span>
+            </div>
+            <div className="text-3xl font-bold text-slate-800">{totalXP}</div>
+            <div className="text-slate-500 text-xs">pengalaman</div>
+          </div>
 
-        function saveReflection() {
-            const today = new Date().toDateString();
-            const reflections = JSON.parse(localStorage.getItem('dailyReflections') || '{}');
-            reflections[today] = dailyReflection.value;
-            localStorage.setItem('dailyReflections', JSON.stringify(reflections));
-            
-            const saved = document.getElementById('reflectionSaved');
-            saved.style.display = 'block';
-            setTimeout(() => {
-                saved.style.display = 'none';
-            }, 2000);
-        }
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Trophy size={20} className="text-purple-500" />
+              <span className="text-slate-600 text-sm font-medium">Habits</span>
+            </div>
+            <div className="text-3xl font-bold text-slate-800">{habits.length}</div>
+            <div className="text-slate-500 text-xs">aktif</div>
+          </div>
+        </div>
 
-        function loadReflection() {
-            const today = new Date().toDateString();
-            const reflections = JSON.parse(localStorage.getItem('dailyReflections') || '{}');
-            dailyReflection.value = reflections[today] || '';
-        }
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Left Column - Habits */}
+          <div className="md:col-span-2">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-slate-800">Habits Hari Ini</h2>
+                <button
+                  onClick={() => setShowAddHabit(!showAddHabit)}
+                  className="flex items-center gap-2 bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition text-sm font-medium"
+                >
+                  <Plus size={18} />
+                  Tambah
+                </button>
+              </div>
 
-        function toggleNotifications() {
-            const toggle = document.getElementById('notifToggle');
-            const status = document.getElementById('notifStatus');
-            
-            if (!notificationsEnabled) {
-                if ('Notification' in window) {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            notificationsEnabled = true;
-                            toggle.classList.add('active');
-                            status.textContent = 'Notifications: On ✅';
-                            scheduleNotifications();
-                            localStorage.setItem('notificationsEnabled', 'true');
-                        } else {
-                            alert('Izinkan notifikasi di browser settings untuk aktifkan reminder!');
-                        }
-                    });
-                }
-            } else {
-                notificationsEnabled = false;
-                toggle.classList.remove('active');
-                status.textContent = 'Notifications: Off';
-                localStorage.setItem('notificationsEnabled', 'false');
-            }
-        }
+              {showAddHabit && (
+                <div className="mb-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                  <div className="grid grid-cols-12 gap-3">
+                    <div className="col-span-2">
+                      <select
+                        value={newHabit.icon}
+                        onChange={(e) => setNewHabit({...newHabit, icon: e.target.value})}
+                        className="w-full p-2 border border-slate-300 rounded text-2xl bg-white"
+                      >
+                        {emojiOptions.map(emoji => (
+                          <option key={emoji} value={emoji}>{emoji}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-span-5">
+                      <input
+                        type="text"
+                        placeholder="Nama habit"
+                        value={newHabit.name}
+                        onChange={(e) => setNewHabit({...newHabit, name: e.target.value})}
+                        className="w-full p-2 border border-slate-300 rounded bg-white"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <input
+                        type="number"
+                        placeholder="XP"
+                        value={newHabit.xp}
+                        onChange={(e) => setNewHabit({...newHabit, xp: e.target.value})}
+                        className="w-full p-2 border border-slate-300 rounded bg-white"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <button
+                        onClick={addHabit}
+                        className="w-full bg-emerald-500 text-white p-2 rounded hover:bg-emerald-600 transition font-medium"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-        function checkNotificationPermission() {
-            const enabled = localStorage.getItem('notificationsEnabled') === 'true';
-            if (enabled && Notification.permission === 'granted') {
-                notificationsEnabled = true;
-                document.getElementById('notifToggle').classList.add('active');
-                document.getElementById('notifStatus').textContent = 'Notifications: On ✅';
-                scheduleNotifications();
-            }
-        }
+              <div className="space-y-3">
+                {habits.map((habit) => {
+                  const isCompleted = completedHabits[`${todayKey}-${habit.id}`];
+                  return (
+                    <div
+                      key={habit.id}
+                      className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-emerald-300 transition group"
+                    >
+                      <div className="flex items-center gap-3 flex-1">
+                        <button
+                          onClick={() => handleHabitClick(habit.id)}
+                          className={`w-6 h-6 rounded border-2 flex items-center justify-center transition ${
+                            isCompleted 
+                              ? 'bg-emerald-500 border-emerald-500' 
+                              : 'border-slate-300 hover:border-emerald-400'
+                          }`}
+                        >
+                          {isCompleted && <span className="text-white text-sm">✓</span>}
+                        </button>
+                        <div className="text-2xl">{habit.icon}</div>
+                        <div className="flex-1">
+                          <div className={`font-medium ${isCompleted ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
+                            {habit.name}
+                          </div>
+                          <div className="text-slate-500 text-xs flex items-center gap-1">
+                            <Zap size={12} />
+                            +{habit.xp} XP
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => deleteHabit(habit.id)}
+                        className="opacity-0 group-hover:opacity-100 text-red-500 hover:bg-red-50 p-2 rounded transition"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-        function scheduleNotifications() {
-            const now = new Date();
-            const morning = new Date();
-            morning.setHours(9, 0, 0, 0);
-            
-            const evening = new Date();
-            evening.setHours(21, 0, 0, 0);
+            {/* Calendar View */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-slate-800">Kalender</h2>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      if (selectedMonth === 0) {
+                        setSelectedMonth(11);
+                        setSelectedYear(selectedYear - 1);
+                      } else {
+                        setSelectedMonth(selectedMonth - 1);
+                      }
+                    }}
+                    className="px-3 py-1 bg-slate-100 rounded hover:bg-slate-200 transition text-slate-600"
+                  >
+                    ←
+                  </button>
+                  <span className="font-medium text-slate-700 min-w-[100px] text-center">
+                    {months[selectedMonth]} {selectedYear}
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (selectedMonth === 11) {
+                        setSelectedMonth(0);
+                        setSelectedYear(selectedYear + 1);
+                      } else {
+                        setSelectedMonth(selectedMonth + 1);
+                      }
+                    }}
+                    className="px-3 py-1 bg-slate-100 rounded hover:bg-slate-200 transition text-slate-600"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
 
-            if (now < morning) {
-                setTimeout(() => showNotification('morning'), morning - now);
-            }
-            
-            if (now < evening) {
-                setTimeout(() => showNotification('evening'), evening - now);
-            }
+              <div className="grid grid-cols-7 gap-2">
+                {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map(day => (
+                  <div key={day} className="text-center text-xs font-medium text-slate-500 pb-2">
+                    {day}
+                  </div>
+                ))}
+                {getMonthCalendar().map((day, idx) => {
+                  if (!day) return <div key={idx} />;
+                  const percentage = day.total > 0 ? (day.completed / day.total) * 100 : 0;
+                  const isToday = day.date.toDateString() === currentDate.toDateString();
+                  return (
+                    <div
+                      key={idx}
+                      className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs transition ${
+                        isToday ? 'ring-2 ring-emerald-500' : ''
+                      } ${
+                        percentage === 100 ? 'bg-emerald-500 text-white font-bold' :
+                        percentage >= 50 ? 'bg-emerald-200 text-emerald-800' :
+                        percentage > 0 ? 'bg-amber-100 text-amber-800' :
+                        'bg-slate-50 text-slate-400'
+                      }`}
+                    >
+                      <div>{day.day}</div>
+                      {percentage > 0 && (
+                        <div className="text-[10px] opacity-75">{Math.round(percentage)}%</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
 
-            setInterval(() => {
-                const currentTime = new Date();
-                if (currentTime.getHours() === 9 && currentTime.getMinutes() === 0) {
-                    showNotification('morning');
-                }
-                if (currentTime.getHours() === 21 && currentTime.getMinutes() === 0) {
-                    showNotification('evening');
-                }
-            }, 60000);
-        }
+          {/* Right Column - Charts */}
+          <div className="space-y-6">
+            {/* View Mode Toggle */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode('weekly')}
+                  className={`flex-1 py-2 px-3 rounded text-sm font-medium transition ${
+                    viewMode === 'weekly' 
+                      ? 'bg-emerald-500 text-white' 
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Mingguan
+                </button>
+                <button
+                  onClick={() => setViewMode('monthly')}
+                  className={`flex-1 py-2 px-3 rounded text-sm font-medium transition ${
+                    viewMode === 'monthly' 
+                      ? 'bg-emerald-500 text-white' 
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Bulanan
+                </button>
+              </div>
+            </div>
 
-        function showNotification(type) {
-            if (!notificationsEnabled || Notification.permission !== 'granted') return;
+            {/* Weekly Chart */}
+            {viewMode === 'weekly' && (
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <h3 className="text-lg font-bold text-slate-800 mb-4">Progress 7 Hari</h3>
+                <div className="space-y-3">
+                  {getWeeklyData().map((data, idx) => (
+                    <div key={idx}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-slate-600">{data.day}</span>
+                        <span className="text-sm text-slate-500">{data.completed}/{data.total}</span>
+                      </div>
+                      <div className="bg-slate-100 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+                          style={{ width: `${data.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            const messages = {
-                morning: {
-                    title: '☀️ Selamat Pagi!',
-                    body: 'Yuk check habit tracker lu! Hari ini mau benerin apa?'
-                },
-                evening: {
-                    title: '🌙 Udah Malam Nih!',
-                    body: 'Jangan lupa isi habit tracker hari ini ya! Gimana progress lu?'
-                }
-            };
+            {/* Monthly Chart */}
+            {viewMode === 'monthly' && (
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <h3 className="text-lg font-bold text-slate-800 mb-4">Progress 12 Bulan</h3>
+                <div className="space-y-2">
+                  {getMonthlyData().map((data, idx) => (
+                    <div key={idx}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-slate-600 w-8">{data.month}</span>
+                        <div className="flex-1 mx-2 bg-slate-100 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+                            style={{ width: `${data.percentage}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-500 w-10 text-right">{data.percentage}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            new Notification(messages[type].title, {
-                body: messages[type].body,
-                icon: '🎯'
-            });
-        }
+            {/* Motivational Box */}
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg shadow-lg p-6 text-white">
+              <div className="text-4xl mb-3">🎯</div>
+              <div className="font-bold text-lg mb-2">Keep Going!</div>
+              <div className="text-emerald-50 text-sm">
+                Kamu udah {completionRate}% hari ini. {completedToday === habits.length ? 'Perfect! 🔥' : `Tinggal ${habits.length - completedToday} lagi!`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-        btnTambah.addEventListener('click', addHabit);
-        habitInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addHabit();
-            }
-        });
-
-        function updateAnalytics() {
-            updateWeeklySummary();
-            updateWeeklyChart();
-            updateAchievements();
-        }
-
-        function updateWeeklySummary() {
-            const today = new Date().getDate();
-            const weekStart = Math.max(1, today - 6);
-            
-            let totalPossible = 0;
-            let totalCompleted = 0;
-            let dayScores = {};
-            let totalStreakSum = 0;
-
-            for (let day = weekStart; day <= today; day++) {
-                dayScores[day] = 0;
-            }
-
-            habits.forEach(habit => {
-                const streak = calculateStreak(habit);
-                totalStreakSum += streak;
-
-                for (let day = weekStart; day <= today; day++) {
-                    totalPossible++;
-                    if (habit.checks[day]) {
-                        totalCompleted++;
-                        dayScores[day]++;
-                    }
-                }
-            });
-
-            const weeklyCompletion = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-            document.getElementById('weeklyCompletion').textContent = weeklyCompletion + '%';
-
-            let bestDay = '-';
-            let maxScore = -1;
-            Object.keys(dayScores).forEach(day => {
-                if (dayScores[day] > maxScore) {
-                    maxScore = dayScores[day];
-                    bestDay = day;
-                }
-            });
-            if (bestDay !== '-') {
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const date = new Date(currentYear, currentMonth, bestDay);
-                bestDay = days[date.getDay()];
-            }
-            document.getElementById('bestDay').textContent = bestDay;
-
-            document.getElementById('totalCompleted').textContent = totalCompleted;
-
-            const avgStreak = habits.length > 0 ? Math.round(totalStreakSum / habits.length) : 0;
-            document.getElementById('averageStreak').textContent = avgStreak;
-        }
-
-        function updateWeeklyChart() {
-            const today = new Date().getDate();
-            const weekStart = Math.max(1, today - 6);
-            const chartContainer = document.getElementById('weeklyChart');
-            chartContainer.innerHTML = '';
-
-            const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-
-            for (let day = weekStart; day <= today; day++) {
-                let completedCount = 0;
-                habits.forEach(habit => {
-                    if (habit.checks[day]) {
-                        completedCount++;
-                    }
-                });
-
-                const percentage = habits.length > 0 ? (completedCount / habits.length) * 100 : 0;
-                const date = new Date(currentYear, currentMonth, day);
-                const dayName = days[date.getDay()];
-
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                bar.style.height = percentage + '%';
-                bar.innerHTML = `
-                    <div class="bar-value">${Math.round(percentage)}%</div>
-                    <div class="bar-label">${dayName}</div>
-                `;
-                chartContainer.appendChild(bar);
-            }
-        }
-
-        function updateAchievements() {
-            const container = document.getElementById('achievementsBadges');
-            let badges = '<div class="chart-title">🏆 Achievements</div>';
-
-            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
-            const totalHabits = habits.length;
-
-            if (longestStreak >= 7) badges += '<span class="achievement-badge">🔥 Week Warrior</span>';
-            if (longestStreak >= 14) badges += '<span class="achievement-badge">💪 Two Week Champion</span>';
-            if (longestStreak >= 30) badges += '<span class="achievement-badge">👑 Month Master</span>';
-            if (totalHabits >= 5) badges += '<span class="achievement-badge">📝 Habit Collector</span>';
-            if (totalHabits >= 10) badges += '<span class="achievement-badge">🎯 Dedicated Tracker</span>';
-
-            const completionRate = parseInt(document.getElementById('completionRate').textContent);
-            if (completionRate === 100) badges += '<span class="achievement-badge">⭐ Perfect Day!</span>';
-            if (completionRate >= 80) badges += '<span class="achievement-badge">🌟 Excellence</span>';
-
-            container.innerHTML = badges;
-        }
-
-        function exportToJSON() {
-            const data = {
-                habits: habits,
-                exportDate: new Date().toISOString(),
-                month: currentMonth,
-                year: currentYear
-            };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `habit-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function exportToCSV() {
-            let csv = 'Habit,';
-            for (let day = 1; day <= daysInMonth; day++) {
-                csv += `Day ${day},`;
-            }
-            csv += 'Total Completed,Streak\n';
-
-            habits.forEach(habit => {
-                csv += `"${habit.name}",`;
-                let totalCompleted = 0;
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const checked = habit.checks[day] ? '✓' : '';
-                    csv += `${checked},`;
-                    if (habit.checks[day]) totalCompleted++;
-                }
-                const streak = calculateStreak(habit);
-                csv += `${totalCompleted},${streak}\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `habit-tracker-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function exportScreenshot() {
-            alert('📸 Screenshot tips:\n\n1. Press Ctrl+Shift+S (Windows) atau Cmd+Shift+4 (Mac)\n2. Select area yang mau di-screenshot\n3. Save dan share!\n\nAtau gunakan browser extension screenshot untuk hasil lebih bagus.');
-        }
-
-        function updateShareCard() {
-            const totalDays = habits.reduce((sum, habit) => {
-                return sum + Object.keys(habit.checks).length;
-            }, 0);
-
-            document.getElementById('shareDays').textContent = totalDays;
-
-            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
-            const achievements = [];
-
-            if (longestStreak >= 30) achievements.push('👑 30+ days streak');
-            if (longestStreak >= 14) achievements.push('💪 2 weeks streak');
-            if (longestStreak >= 7) achievements.push('🔥 7 days streak');
-            if (habits.length >= 5) achievements.push('📝 Tracking 5+ habits');
-
-            const achievementsHTML = achievements.map(a => `<span class="achievement-badge">${a}</span>`).join('');
-            document.getElementById('shareAchievements').innerHTML = achievementsHTML;
-        }
-
-        function copyShareText() {
-            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
-            const totalHabits = habits.length;
-            const completionRate = document.getElementById('completionRate').textContent;
-
-            const text = `🎯 Habit Tracker Progress!\n\n` +
-                        `📊 Stats:\n` +
-                        `• ${totalHabits} habits being tracked\n` +
-                        `• ${longestStreak} days longest streak 🔥\n` +
-                        `• ${completionRate} completion rate today\n\n` +
-                        `💪 Benerin hidup satu habit at a time!\n` +
-                        `#HabitTracker #SelfImprovement #Consistency`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Text copied! Paste di social media lu!');
-            });
-        }
-
-        function shareToTwitter() {
-            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
-            const totalHabits = habits.length;
-            const completionRate = document.getElementById('completionRate').textContent;
-
-            const text = `🎯 My Habit Tracker Progress!\n\n` +
-                        `📊 ${totalHabits} habits • ${longestStreak} days streak 🔥 • ${completionRate} completion\n\n` +
-                        `💪 Building better habits, one day at a time!\n` +
-                        `#HabitTracker #SelfImprovement`;
-
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-        }
-
-        init();
-    </script>
-</body>
-</html>
+export default AdictiveHabitTracker;
