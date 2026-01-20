@@ -13,8 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #60407a;
-            background: linear-gradient(90deg, rgba(96, 64, 122, 1) 0%, rgba(26, 18, 18, 1) 50%, rgba(9, 74, 34, 1) 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -349,6 +348,197 @@
             display: none;
         }
 
+        .analytics-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .analytics-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+        }
+
+        .chart-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: translateY(-5px);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .bar-label {
+            margin-top: 5px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .weekly-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-card .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .summary-card .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .export-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .export-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 12px 25px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .share-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .share-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .share-card .big-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .share-card .description {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 12px 25px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
         .notification-section {
             background: white;
             padding: 20px;
@@ -508,6 +698,61 @@
             <textarea id="dailyReflection" placeholder="Gimana hari ini? Apa yang bikin susah konsisten? Apa yang bikin semangat?"></textarea>
             <div class="reflection-saved" id="reflectionSaved">✅ Tersimpan otomatis</div>
         </div>
+
+        <div class="analytics-section">
+            <h3>📊 Analytics & Progress</h3>
+            
+            <div class="weekly-summary">
+                <div class="summary-card">
+                    <div class="number" id="weeklyCompletion">0%</div>
+                    <div class="label">Completion Minggu Ini</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="bestDay">-</div>
+                    <div class="label">Hari Terbaik</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="totalCompleted">0</div>
+                    <div class="label">Total Habits Selesai</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="averageStreak">0</div>
+                    <div class="label">Average Streak</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📈 7 Hari Terakhir</div>
+                <div class="bar-chart" id="weeklyChart"></div>
+            </div>
+
+            <div id="achievementsBadges" style="margin-top: 20px;">
+                <div class="chart-title">🏆 Achievements</div>
+            </div>
+        </div>
+
+        <div class="export-section">
+            <h3>💾 Export & Backup</h3>
+            <p style="margin-bottom: 15px; color: #666;">Download progress lu buat backup atau analisis lebih lanjut</p>
+            <div class="export-buttons">
+                <button class="export-btn" onclick="exportToJSON()">📥 Download JSON</button>
+                <button class="export-btn" onclick="exportToCSV()">📊 Download CSV</button>
+                <button class="export-btn" onclick="exportScreenshot()">📸 Screenshot Progress</button>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <h3>🎯 Share Your Progress</h3>
+            <div class="share-card" id="shareCard">
+                <div class="big-number" id="shareDays">0</div>
+                <div class="description" id="shareDescription">hari konsisten tracking habits!</div>
+                <div style="margin-top: 15px;" id="shareAchievements"></div>
+            </div>
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyShareText()">📋 Copy Achievement Text</button>
+                <button class="share-btn" onclick="shareToTwitter()">🐦 Share to Twitter</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -545,6 +790,8 @@
             loadReflection();
             checkNotificationPermission();
             setupAutoSaveReflection();
+            updateAnalytics();
+            updateShareCard();
         }
 
         function showRandomQuote() {
@@ -603,6 +850,8 @@
             saveToStorage();
             renderHabits();
             updateStats();
+            updateAnalytics();
+            updateShareCard();
         }
 
         function deleteHabit(id) {
@@ -611,6 +860,8 @@
                 saveToStorage();
                 renderHabits();
                 updateStats();
+                updateAnalytics();
+                updateShareCard();
             }
         }
 
@@ -862,6 +1113,213 @@
                 addHabit();
             }
         });
+
+        function updateAnalytics() {
+            updateWeeklySummary();
+            updateWeeklyChart();
+            updateAchievements();
+        }
+
+        function updateWeeklySummary() {
+            const today = new Date().getDate();
+            const weekStart = Math.max(1, today - 6);
+            
+            let totalPossible = 0;
+            let totalCompleted = 0;
+            let dayScores = {};
+            let totalStreakSum = 0;
+
+            for (let day = weekStart; day <= today; day++) {
+                dayScores[day] = 0;
+            }
+
+            habits.forEach(habit => {
+                const streak = calculateStreak(habit);
+                totalStreakSum += streak;
+
+                for (let day = weekStart; day <= today; day++) {
+                    totalPossible++;
+                    if (habit.checks[day]) {
+                        totalCompleted++;
+                        dayScores[day]++;
+                    }
+                }
+            });
+
+            const weeklyCompletion = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
+            document.getElementById('weeklyCompletion').textContent = weeklyCompletion + '%';
+
+            let bestDay = '-';
+            let maxScore = -1;
+            Object.keys(dayScores).forEach(day => {
+                if (dayScores[day] > maxScore) {
+                    maxScore = dayScores[day];
+                    bestDay = day;
+                }
+            });
+            if (bestDay !== '-') {
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const date = new Date(currentYear, currentMonth, bestDay);
+                bestDay = days[date.getDay()];
+            }
+            document.getElementById('bestDay').textContent = bestDay;
+
+            document.getElementById('totalCompleted').textContent = totalCompleted;
+
+            const avgStreak = habits.length > 0 ? Math.round(totalStreakSum / habits.length) : 0;
+            document.getElementById('averageStreak').textContent = avgStreak;
+        }
+
+        function updateWeeklyChart() {
+            const today = new Date().getDate();
+            const weekStart = Math.max(1, today - 6);
+            const chartContainer = document.getElementById('weeklyChart');
+            chartContainer.innerHTML = '';
+
+            const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+
+            for (let day = weekStart; day <= today; day++) {
+                let completedCount = 0;
+                habits.forEach(habit => {
+                    if (habit.checks[day]) {
+                        completedCount++;
+                    }
+                });
+
+                const percentage = habits.length > 0 ? (completedCount / habits.length) * 100 : 0;
+                const date = new Date(currentYear, currentMonth, day);
+                const dayName = days[date.getDay()];
+
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = percentage + '%';
+                bar.innerHTML = `
+                    <div class="bar-value">${Math.round(percentage)}%</div>
+                    <div class="bar-label">${dayName}</div>
+                `;
+                chartContainer.appendChild(bar);
+            }
+        }
+
+        function updateAchievements() {
+            const container = document.getElementById('achievementsBadges');
+            let badges = '<div class="chart-title">🏆 Achievements</div>';
+
+            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
+            const totalHabits = habits.length;
+
+            if (longestStreak >= 7) badges += '<span class="achievement-badge">🔥 Week Warrior</span>';
+            if (longestStreak >= 14) badges += '<span class="achievement-badge">💪 Two Week Champion</span>';
+            if (longestStreak >= 30) badges += '<span class="achievement-badge">👑 Month Master</span>';
+            if (totalHabits >= 5) badges += '<span class="achievement-badge">📝 Habit Collector</span>';
+            if (totalHabits >= 10) badges += '<span class="achievement-badge">🎯 Dedicated Tracker</span>';
+
+            const completionRate = parseInt(document.getElementById('completionRate').textContent);
+            if (completionRate === 100) badges += '<span class="achievement-badge">⭐ Perfect Day!</span>';
+            if (completionRate >= 80) badges += '<span class="achievement-badge">🌟 Excellence</span>';
+
+            container.innerHTML = badges;
+        }
+
+        function exportToJSON() {
+            const data = {
+                habits: habits,
+                exportDate: new Date().toISOString(),
+                month: currentMonth,
+                year: currentYear
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `habit-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportToCSV() {
+            let csv = 'Habit,';
+            for (let day = 1; day <= daysInMonth; day++) {
+                csv += `Day ${day},`;
+            }
+            csv += 'Total Completed,Streak\n';
+
+            habits.forEach(habit => {
+                csv += `"${habit.name}",`;
+                let totalCompleted = 0;
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const checked = habit.checks[day] ? '✓' : '';
+                    csv += `${checked},`;
+                    if (habit.checks[day]) totalCompleted++;
+                }
+                const streak = calculateStreak(habit);
+                csv += `${totalCompleted},${streak}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `habit-tracker-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportScreenshot() {
+            alert('📸 Screenshot tips:\n\n1. Press Ctrl+Shift+S (Windows) atau Cmd+Shift+4 (Mac)\n2. Select area yang mau di-screenshot\n3. Save dan share!\n\nAtau gunakan browser extension screenshot untuk hasil lebih bagus.');
+        }
+
+        function updateShareCard() {
+            const totalDays = habits.reduce((sum, habit) => {
+                return sum + Object.keys(habit.checks).length;
+            }, 0);
+
+            document.getElementById('shareDays').textContent = totalDays;
+
+            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
+            const achievements = [];
+
+            if (longestStreak >= 30) achievements.push('👑 30+ days streak');
+            if (longestStreak >= 14) achievements.push('💪 2 weeks streak');
+            if (longestStreak >= 7) achievements.push('🔥 7 days streak');
+            if (habits.length >= 5) achievements.push('📝 Tracking 5+ habits');
+
+            const achievementsHTML = achievements.map(a => `<span class="achievement-badge">${a}</span>`).join('');
+            document.getElementById('shareAchievements').innerHTML = achievementsHTML;
+        }
+
+        function copyShareText() {
+            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
+            const totalHabits = habits.length;
+            const completionRate = document.getElementById('completionRate').textContent;
+
+            const text = `🎯 Habit Tracker Progress!\n\n` +
+                        `📊 Stats:\n` +
+                        `• ${totalHabits} habits being tracked\n` +
+                        `• ${longestStreak} days longest streak 🔥\n` +
+                        `• ${completionRate} completion rate today\n\n` +
+                        `💪 Benerin hidup satu habit at a time!\n` +
+                        `#HabitTracker #SelfImprovement #Consistency`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Text copied! Paste di social media lu!');
+            });
+        }
+
+        function shareToTwitter() {
+            const longestStreak = parseInt(document.getElementById('longestStreak').textContent);
+            const totalHabits = habits.length;
+            const completionRate = document.getElementById('completionRate').textContent;
+
+            const text = `🎯 My Habit Tracker Progress!\n\n` +
+                        `📊 ${totalHabits} habits • ${longestStreak} days streak 🔥 • ${completionRate} completion\n\n` +
+                        `💪 Building better habits, one day at a time!\n` +
+                        `#HabitTracker #SelfImprovement`;
+
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
 
         init();
     </script>
