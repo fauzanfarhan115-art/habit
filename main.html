@@ -7,66 +7,218 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #1a202c;
         }
         .container { max-width: 1400px; margin: 0 auto; }
-        .header { text-align: center; color: #2c3e50; margin-bottom: 30px; }
-        .quote-box { background: white; padding: 15px; border-radius: 10px; margin: 15px 0; color: #5a6c7d; font-style: italic; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #3498db; }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(8px);
+        }
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .quote-box { 
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px 25px; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            color: white; 
+            font-style: italic;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
         .stats {
-            background: white;
-            padding: 20px; border-radius: 15px; margin-bottom: 20px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px; 
+            border-radius: 20px; 
+            margin-bottom: 25px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 25px; 
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(8px);
         }
-        .stat-number { font-size: 2.5em; font-weight: bold; color: #3498db; }
-        .stat-label { font-size: 0.9em; color: #7f8c8d; }
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            transition: transform 0.2s;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        .stat-item:hover { transform: translateY(-2px); }
+        .stat-number { 
+            font-size: 2.8em; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { font-size: 0.9em; color: #5a67d8; font-weight: 500; margin-top: 5px; }
         .input-section, .templates-section, .table-wrapper, .reflection-section, .analytics-section {
-            background: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px; 
+            border-radius: 20px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(8px);
         }
-        .input-row { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
-        #habitInput { flex: 1; min-width: 200px; padding: 15px; border: 2px solid #3498db; border-radius: 10px; }
-        #categorySelect, #goalInput { padding: 15px; border: 2px solid #3498db; border-radius: 10px; }
+        .input-section h3, .analytics-section h3, .reflection-section h3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        .input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+        #habitInput { 
+            flex: 1; 
+            min-width: 220px; 
+            padding: 14px 18px; 
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            font-size: 0.95em;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        #habitInput:focus { 
+            outline: none; 
+            border-color: #667eea; 
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+        #categorySelect, #goalInput { 
+            padding: 14px 18px; 
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            font-size: 0.95em;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
         #btnTambah {
-            padding: 15px 35px; background: #3498db; color: white; border: none;
-            border-radius: 10px; cursor: pointer; font-weight: bold; transition: background 0.3s;
+            padding: 14px 30px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            border: none;
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        #btnTambah:hover { background: #2980b9; }
-        .view-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
-        .view-btn { padding: 10px 20px; background: #ecf0f1; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #34495e; transition: all 0.3s; }
-        .view-btn.active { background: #3498db; color: white; }
-        .view-btn:hover { background: #bdc3c7; }
-        .view-btn.active:hover { background: #2980b9; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
-        .calendar-day { 
-            aspect-ratio: 1; background: #f8f9fa; border-radius: 8px; padding: 10px; 
-            cursor: pointer; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        #btnTambah:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        .view-toggle { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .view-btn { 
+            padding: 10px 20px; 
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: #5a67d8;
             transition: all 0.2s;
         }
-        .calendar-day:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .calendar-day.today { border-color: #3498db; background: #ebf5fb; }
-        .calendar-day .day-num { font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
-        .calendar-day .completion { font-size: 0.8em; color: #7f8c8d; }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th, td { padding: 15px 12px; border: 1px solid #ecf0f1; text-align: center; }
-        th { background: #f8f9fa; color: #2c3e50; font-weight: 600; font-size: 0.9em; border-bottom: 2px solid #3498db; }
-        td:first-child { 
-            position: sticky; left: 0; background: white; z-index: 5; 
-            text-align: left; border-right: 2px solid #ecf0f1; 
+        .view-btn.active { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        tr:hover { background: #f8f9fa; }
-        tr:hover td:first-child { background: #f8f9fa; }
-        .streak-badge { color: #e74c3c; font-size: 0.8em; }
-        .category-badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; margin-left: 5px; }
-        .cat-kesehatan { background: #d5f4e6; color: #27ae60; }
-        .cat-produktivitas { background: #dae8fc; color: #3498db; }
-        .cat-belajar { background: #fff4e6; color: #e67e22; }
-        .cat-sosial { background: #fde2e4; color: #e74c3c; }
-        .cat-keuangan { background: #e8daef; color: #8e44ad; }
-        .cat-kebiasaan { background: #d6eaf8; color: #2980b9; }
+        .view-btn:hover:not(.active) { 
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #667eea;
+        }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+        .calendar-day { 
+            aspect-ratio: 1; 
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px; 
+            padding: 12px; 
+            cursor: pointer; 
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+            background: white;
+        }
+        .calendar-day.today { 
+            border-color: #667eea; 
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .calendar-day .day-num { font-weight: 700; margin-bottom: 6px; color: #5a67d8; font-size: 1.1em; }
+        .calendar-day .completion { font-size: 0.8em; color: #8b5cf6; font-weight: 500; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 600px; }
+        th, td { padding: 16px 14px; text-align: center; }
+        th { 
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #5a67d8;
+            font-weight: 700; 
+            font-size: 0.9em;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        th:first-child { border-radius: 12px 0 0 0; }
+        th:last-child { border-radius: 0 12px 0 0; }
+        td { border-bottom: 1px solid rgba(102, 126, 234, 0.1); }
+        td:first-child { 
+            position: sticky; 
+            left: 0; 
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 5; 
+            text-align: left; 
+            border-right: 2px solid rgba(102, 126, 234, 0.1);
+            font-weight: 600;
+        }
+        tr:hover { background: rgba(102, 126, 234, 0.05); }
+        tr:hover td:first-child { background: rgba(102, 126, 234, 0.05); }
+        tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+        tr:last-child td:last-child { border-radius: 0 0 12px 0; }
+        .category-badge { 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 0.75em; 
+            margin-left: 6px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .cat-kesehatan { background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .cat-produktivitas { background: rgba(59, 130, 246, 0.15); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .cat-belajar { background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .cat-sosial { background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .cat-keuangan { background: rgba(168, 85, 247, 0.15); color: #7c3aed; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .cat-kebiasaan { background: rgba(6, 182, 212, 0.15); color: #0891b2; border: 1px solid rgba(6, 182, 212, 0.3); }
         input[type="checkbox"] { 
             width: 22px; height: 22px; cursor: pointer;
             appearance: none;
@@ -331,6 +483,22 @@
                 <span class="close-modal" onclick="closeModal('comparisonModal')">&times;</span>
                 <h2>📈 Perbandingan Mingguan</h2>
                 <div id="comparisonContent"></div>
+            </div>
+        </div>
+
+        <!-- Modal Photo Comparison Timeline -->
+        <div id="photoComparisonModal" class="modal">
+            <div class="modal-content" style="max-width: 800px;">
+                <span class="close-modal" onclick="closeModal('photoComparisonModal')">&times;</span>
+                <div id="photoComparisonContent"></div>
+            </div>
+        </div>
+
+        <!-- Modal Before/After Compare -->
+        <div id="photoCompareModal" class="modal">
+            <div class="modal-content" style="max-width: 900px;">
+                <span class="close-modal" onclick="closeModal('photoCompareModal')">&times;</span>
+                <div id="photoCompareContent"></div>
             </div>
         </div>
     </div>
@@ -614,6 +782,7 @@
                 const tr = document.createElement('tr');
                 const streak = calculateStreak(habit);
                 const goalText = habit.goal > 0 ? `🎯 ${habit.goal}/minggu` : '';
+                const versionBadge = habit.evolution && habit.evolution.length > 0 ? `<span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7em; margin-left: 5px;">v${habit.evolution.length + 1}</span>` : '';
                 
                 // Hitung completion rate 7 hari terakhir
                 let completed = 0;
@@ -652,6 +821,7 @@
                 let tdName = `<td style="min-width: 200px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                         <strong>${habit.name}</strong>
+                        ${versionBadge}
                         <span class="category-badge cat-${habit.category}">${getCategoryEmoji(habit.category)}</span>
                     </div>
                     <div style="font-size: 0.85em; color: ${streakColor}; margin-bottom: 5px; font-weight: 600;">
@@ -715,22 +885,105 @@
             const modal = document.getElementById('habitModal');
             document.getElementById('habitModalTitle').textContent = habit.name;
             
+            const evolution = habit.evolution || [];
+            const currentVersion = evolution.length > 0 ? evolution.length : 1;
+            
+            let evolutionHistory = '';
+            if (evolution.length > 0) {
+                evolutionHistory = `
+                    <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 12px; border-left: 4px solid #667eea;">
+                        <h4 style="margin-bottom: 10px; color: #667eea;">📜 Evolution History</h4>
+                        ${evolution.map((ev, idx) => `
+                            <div style="padding: 8px 0; border-bottom: 1px solid rgba(102, 126, 234, 0.2);">
+                                <strong>Version ${idx + 1}:</strong> ${ev.oldName || habit.name}
+                                ${ev.oldGoal ? `<span style="color: #7f8c8d;"> (${ev.oldGoal}x/minggu)</span>` : ''}
+                                <div style="font-size: 0.85em; color: #718096;">
+                                    ${new Date(ev.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                    ${ev.reason ? `<br>📝 ${ev.reason}` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div style="padding: 8px 0; font-weight: 600; color: #667eea;">
+                            <strong>Current Version ${currentVersion}:</strong> ${habit.name}
+                            ${habit.goal > 0 ? `<span style="color: #7f8c8d;"> (${habit.goal}x/minggu)</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
             let html = `
                 <p><strong>Kategori:</strong> <span class="category-badge cat-${habit.category}">${getCategoryEmoji(habit.category)} ${habit.category}</span></p>
+                <p><strong>Current Version:</strong> v${currentVersion}</p>
                 <p><strong>Current Streak:</strong> 🔥 ${calculateStreak(habit)} hari</p>
                 <p><strong>Target:</strong> ${habit.goal > 0 ? habit.goal + 'x/minggu' : 'Tidak ada'}</p>
-                <hr style="margin: 15px 0;">
-                <h4>⏱️ Time Tracker Hari Ini</h4>
+                
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(102, 126, 234, 0.2);">
+                
+                <h4 style="color: #667eea;">⬆️ Upgrade Habit</h4>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748;">New Name (Optional)</label>
+                    <input type="text" id="upgradeName" placeholder="${habit.name}" style="width: 100%; padding: 10px; border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.8);">
+                </div>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748;">New Goal (per minggu)</label>
+                    <input type="number" id="upgradeGoal" placeholder="${habit.goal || 0}" min="0" max="7" style="width: 100%; padding: 10px; border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.8);">
+                </div>
+                <div style="margin: 15px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748;">Reason for Change</label>
+                    <input type="text" id="upgradeReason" placeholder="Misal: Udah terbiasa, mau challenge lebih" style="width: 100%; padding: 10px; border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.8);">
+                </div>
+                <button onclick="upgradeHabit(${id})" style="padding: 10px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                    ✨ Upgrade Habit
+                </button>
+                
+                ${evolutionHistory}
+                
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(102, 126, 234, 0.2);">
+                <h4 style="color: #667eea;">⏱️ Time Tracker Hari Ini</h4>
                 <input type="number" class="time-input" id="timeInput" placeholder="Menit" value="${habit.timeLog?.[todayDate] || ''}">
                 <button onclick="saveTime(${id})" style="padding: 5px 15px; margin-left: 10px;">Simpan</button>
-                <h4 style="margin-top: 15px;">📝 Catatan Hari Ini</h4>
-                <textarea id="noteInput" style="width: 100%; padding: 10px; border-radius: 8px;">${habit.notes?.[todayDate] || ''}</textarea>
+                <h4 style="margin-top: 15px; color: #667eea;">📝 Catatan Hari Ini</h4>
+                <textarea id="noteInput" style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid rgba(102, 126, 234, 0.3);">${habit.notes?.[todayDate] || ''}</textarea>
                 <button onclick="saveNote(${id})" style="padding: 8px 20px; margin-top: 10px;">Simpan Catatan</button>
             `;
             
             document.getElementById('habitModalContent').innerHTML = html;
             renderPhotoGrid(habit);
             modal.style.display = 'block';
+        }
+
+        function upgradeHabit(id) {
+            const habit = habits.find(h => h.id === id);
+            if (!habit) return;
+            
+            const newName = document.getElementById('upgradeName').value.trim();
+            const newGoal = parseInt(document.getElementById('upgradeGoal').value);
+            const reason = document.getElementById('upgradeReason').value.trim();
+            
+            if (!newName && !newGoal && isNaN(newGoal)) {
+                alert('Isi minimal salah satu: Name atau Goal baru!');
+                return;
+            }
+            
+            // Save to evolution history
+            if (!habit.evolution) habit.evolution = [];
+            
+            habit.evolution.push({
+                oldName: habit.name,
+                oldGoal: habit.goal,
+                timestamp: new Date().toISOString(),
+                reason: reason || 'No reason provided',
+                completedDays: Object.keys(habit.checks).filter(k => habit.checks[k]).length
+            });
+            
+            // Update habit
+            if (newName) habit.name = newName;
+            if (!isNaN(newGoal) && newGoal >= 0) habit.goal = newGoal;
+            habit.goalNotified = false; // Reset notif
+            
+            saveAndRefresh();
+            alert(`🎉 Habit upgraded to v${habit.evolution.length + 1}!`);
+            closeModal('habitModal');
         }
 
         function saveTime(id) {
@@ -756,6 +1009,18 @@
             grid.innerHTML = '';
             
             const photos = habit.photos?.[todayDate] || [];
+            
+            // Ambil semua foto dari semua hari untuk comparison
+            const allPhotos = [];
+            for (let day in habit.photos) {
+                if (habit.photos[day] && habit.photos[day].length > 0) {
+                    habit.photos[day].forEach(photo => {
+                        allPhotos.push({ day: parseInt(day), photo: photo });
+                    });
+                }
+            }
+            allPhotos.sort((a, b) => b.day - a.day); // Sort terbaru dulu
+            
             photos.forEach((photo, idx) => {
                 const item = document.createElement('div');
                 item.className = 'photo-item';
@@ -777,6 +1042,100 @@
                 addBtn.onclick = () => addPhoto(habit.id);
                 grid.appendChild(addBtn);
             }
+            
+            // Tombol untuk lihat progress comparison
+            if (allPhotos.length >= 2) {
+                const compareBtn = document.createElement('button');
+                compareBtn.textContent = '📊 Lihat Progress Comparison';
+                compareBtn.style.cssText = 'margin-top: 15px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%;';
+                compareBtn.onclick = () => showPhotoComparison(habit, allPhotos);
+                document.getElementById('photoGrid').parentElement.appendChild(compareBtn);
+            }
+        }
+
+        function showPhotoComparison(habit, allPhotos) {
+            const modal = document.getElementById('photoComparisonModal');
+            const content = document.getElementById('photoComparisonContent');
+            
+            let html = `
+                <h3>📸 Progress Photos - ${habit.name}</h3>
+                <p style="color: #7f8c8d; margin-bottom: 20px;">Total ${allPhotos.length} foto dari ${Object.keys(habit.photos).length} hari berbeda</p>
+            `;
+            
+            // Timeline view
+            html += '<div style="display: flex; flex-direction: column; gap: 20px;">';
+            allPhotos.forEach((item, idx) => {
+                const date = new Date(currentYear, currentMonth, item.day);
+                const dateStr = new Intl.DateTimeFormat('id-ID', { 
+                    weekday: 'short', day: 'numeric', month: 'short' 
+                }).format(date);
+                
+                const daysDiff = todayDate - item.day;
+                const diffText = daysDiff === 0 ? 'Hari ini' : daysDiff === 1 ? 'Kemarin' : `${daysDiff} hari lalu`;
+                
+                html += `
+                    <div style="border: 2px solid #ecf0f1; border-radius: 12px; padding: 15px; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <strong style="color: #2c3e50;">${dateStr}</strong>
+                                <span style="color: #7f8c8d; font-size: 0.9em; margin-left: 10px;">${diffText}</span>
+                            </div>
+                            ${idx < allPhotos.length - 1 ? `<button onclick="comparePhotos(${idx}, ${idx + 1})" style="padding: 5px 15px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;">Compare dengan sebelumnya</button>` : ''}
+                        </div>
+                        <img src="${item.photo}" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; background: #f8f9fa;">
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            content.innerHTML = html;
+            
+            // Simpan data untuk comparison
+            window.comparisonPhotos = allPhotos;
+            
+            modal.style.display = 'block';
+        }
+
+        function comparePhotos(idx1, idx2) {
+            const photos = window.comparisonPhotos;
+            if (!photos || !photos[idx1] || !photos[idx2]) return;
+            
+            const modal = document.getElementById('photoCompareModal');
+            const content = document.getElementById('photoCompareContent');
+            
+            const photo1 = photos[idx1];
+            const photo2 = photos[idx2];
+            
+            const date1 = new Date(currentYear, currentMonth, photo1.day);
+            const date2 = new Date(currentYear, currentMonth, photo2.day);
+            const dateStr1 = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' }).format(date1);
+            const dateStr2 = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' }).format(date2);
+            
+            const daysDiff = photo1.day - photo2.day;
+            
+            content.innerHTML = `
+                <h3>🔄 Before & After Comparison</h3>
+                <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">Selisih: ${daysDiff} hari</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div style="background: #e74c3c; color: white; padding: 8px; text-align: center; border-radius: 8px 8px 0 0; font-weight: 600;">
+                            BEFORE - ${dateStr2}
+                        </div>
+                        <img src="${photo2.photo}" style="width: 100%; height: 400px; object-fit: contain; border: 2px solid #e74c3c; border-top: none; background: #f8f9fa;">
+                    </div>
+                    <div>
+                        <div style="background: #27ae60; color: white; padding: 8px; text-align: center; border-radius: 8px 8px 0 0; font-weight: 600;">
+                            AFTER - ${dateStr1}
+                        </div>
+                        <img src="${photo1.photo}" style="width: 100%; height: 400px; object-fit: contain; border: 2px solid #27ae60; border-top: none; background: #f8f9fa;">
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #ebf5fb; border-radius: 8px; text-align: center;">
+                    <strong style="color: #2c3e50;">💪 Keep going! Progress lo keren banget!</strong>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
         }
 
         function addPhoto(habitId) {
@@ -917,6 +1276,10 @@
 
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
+            // Clear comparison data when closing
+            if (id === 'photoComparisonModal' || id === 'photoCompareModal') {
+                window.comparisonPhotos = null;
+            }
         }
 
         function deleteHabit(id) {
