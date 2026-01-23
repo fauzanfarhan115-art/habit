@@ -37,7 +37,7 @@
             padding: 20px 25px; 
             border-radius: 12px; 
             margin: 20px 0; 
-            color: black; 
+            color: white; 
             font-style: italic;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -733,9 +733,24 @@
 
         function calculateStreak(habit) {
             let streak = 0;
+            const restDays = habit.restDays || [];
+            
             for (let i = todayDate; i >= 1; i--) {
-                if (habit.checks[i]) streak++;
-                else if (i < todayDate) break;
+                const date = new Date(currentYear, currentMonth, i);
+                const dayOfWeek = date.getDay(); // 0 = Minggu, 1 = Senin, dst
+                
+                // Jika hari ini adalah rest day, skip tapi jangan break streak
+                if (restDays.includes(dayOfWeek)) {
+                    continue; // Lanjut cek hari sebelumnya
+                }
+                
+                // Jika bukan rest day, cek apakah checked
+                if (habit.checks[i]) {
+                    streak++;
+                } else if (i < todayDate) {
+                    // Jika miss dan bukan hari ini, break streak
+                    break;
+                }
             }
             return streak;
         }
@@ -847,31 +862,44 @@
                     const td = document.createElement('td');
                     if (d === todayDate) td.classList.add('today-col');
 
-                    const cb = document.createElement('input');
-                    cb.type = 'checkbox';
-                    cb.checked = habit.checks[d] || false;
+                    // Check if this day is a rest day
+                    const date = new Date(currentYear, currentMonth, d);
+                    const dayOfWeek = date.getDay();
+                    const isRestDay = habit.restDays && habit.restDays.includes(dayOfWeek);
                     
-                    // Tambah visual feedback untuk hari yang completed
-                    if (habit.checks[d]) {
-                        td.style.background = '#d5f4e6';
-                    }
-
-                    if (d === todayDate) {
-                        cb.onchange = () => {
-                            toggleCheck(habit.id, d);
-                            // Update background saat toggle
-                            if (cb.checked) {
-                                td.style.background = '#d5f4e6';
-                            } else {
-                                td.style.background = '';
-                            }
-                        };
+                    if (isRestDay) {
+                        // Rest day - tampilkan ikon istirahat
+                        td.innerHTML = '<div style="font-size: 1.2em;">😴</div>';
+                        td.style.background = 'rgba(245, 158, 11, 0.1)';
+                        td.title = 'Rest Day';
                     } else {
-                        cb.disabled = true;
-                        cb.title = d < todayDate ? "Masa lalu" : "Belum waktunya";
-                    }
+                        const cb = document.createElement('input');
+                        cb.type = 'checkbox';
+                        cb.checked = habit.checks[d] || false;
+                        
+                        // Tambah visual feedback untuk hari yang completed
+                        if (habit.checks[d]) {
+                            td.style.background = '#d5f4e6';
+                        }
 
-                    td.appendChild(cb);
+                        if (d === todayDate) {
+                            cb.onchange = () => {
+                                toggleCheck(habit.id, d);
+                                // Update background saat toggle
+                                if (cb.checked) {
+                                    td.style.background = '#d5f4e6';
+                                } else {
+                                    td.style.background = '';
+                                }
+                            };
+                        } else {
+                            cb.disabled = true;
+                            cb.title = d < todayDate ? "Masa lalu" : "Belum waktunya";
+                        }
+
+                        td.appendChild(cb);
+                    }
+                    
                     tr.appendChild(td);
                 });
                 tbody.appendChild(tr);
@@ -911,11 +939,28 @@
                 `;
             }
             
+            const restDays = habit.restDays || [];
+            const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            
             let html = `
                 <p><strong>Kategori:</strong> <span class="category-badge cat-${habit.category}">${getCategoryEmoji(habit.category)} ${habit.category}</span></p>
                 <p><strong>Current Version:</strong> v${currentVersion}</p>
                 <p><strong>Current Streak:</strong> 🔥 ${calculateStreak(habit)} hari</p>
                 <p><strong>Target:</strong> ${habit.goal > 0 ? habit.goal + 'x/minggu' : 'Tidak ada'}</p>
+                
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(102, 126, 234, 0.2);">
+                
+                <h4 style="color: #667eea;">😴 Rest Days</h4>
+                <p style="font-size: 0.85em; color: #718096; margin-bottom: 10px;">Pilih hari-hari rest (streak gak bakal putus)</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 15px;">
+                    ${dayNames.map((day, idx) => `
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 8px; background: ${restDays.includes(idx) ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15))' : 'rgba(255, 255, 255, 0.7)'}; border-radius: 8px; cursor: pointer; border: 2px solid ${restDays.includes(idx) ? '#667eea' : 'rgba(102, 126, 234, 0.2)'}; transition: all 0.2s;">
+                            <input type="checkbox" ${restDays.includes(idx) ? 'checked' : ''} onchange="toggleRestDay(${id}, ${idx})" style="cursor: pointer;">
+                            <span style="font-size: 0.85em; font-weight: 600;">${day}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                ${restDays.length > 0 ? `<p style="font-size: 0.85em; color: #667eea; margin-bottom: 15px;">✓ Rest days: ${restDays.map(d => dayNames[d]).join(', ')}</p>` : ''}
                 
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(102, 126, 234, 0.2);">
                 
@@ -950,6 +995,23 @@
             document.getElementById('habitModalContent').innerHTML = html;
             renderPhotoGrid(habit);
             modal.style.display = 'block';
+        }
+
+        function toggleRestDay(habitId, dayIndex) {
+            const habit = habits.find(h => h.id === habitId);
+            if (!habit) return;
+            
+            if (!habit.restDays) habit.restDays = [];
+            
+            const idx = habit.restDays.indexOf(dayIndex);
+            if (idx > -1) {
+                habit.restDays.splice(idx, 1); // Remove
+            } else {
+                habit.restDays.push(dayIndex); // Add
+            }
+            
+            saveAndRefresh();
+            openHabitDetail(habitId); // Refresh modal
         }
 
         function upgradeHabit(id) {
