@@ -303,6 +303,15 @@
     <div class="container">
         <div class="header">
             <h1>🎯 Habit Tracker Pro</h1>
+            <div style="margin: 15px 0; display: flex; justify-content: center; gap: 10px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+    <button onclick="downloadSync()" style="padding: 10px 15px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.75em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        📤 DOWNLOAD DATA
+    </button>
+    <button onclick="document.getElementById('uploadFile').click()" style="padding: 10px 15px; background: #f39c12; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.75em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        📥 UPLOAD DATA
+    </button>
+    <input type="file" id="uploadFile" style="display: none;" accept=".json" onchange="uploadSync(event)">
+</div>
             <div id="monthDisplay" class="month-display"></div>
             <div class="quote-box" id="dailyQuote"></div>
         </div>
