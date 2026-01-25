@@ -1582,6 +1582,62 @@
         };
 
         init();
+        // --- FITUR TAMBAHAN SINKRONISASI ---
+
+function downloadSync() {
+    try {
+        const data = {};
+        // Mengambil semua yang ada di localStorage (termasuk habitTrackerData dan semua journal_)
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            data[key] = localStorage.getItem(key);
+        }
+        
+        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const dateStr = new Date().toISOString().slice(0,10);
+        
+        a.href = url;
+        a.download = `Habit_Data_${dateStr}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (e) {
+        alert("Gagal mengekspor data.");
+    }
+}
+
+function uploadSync(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Validasi sederhana: pastikan file berisi data tracker kita
+            if (!data['habitTrackerData']) {
+                alert("File tidak valid! Gunakan file .json yang didownload dari aplikasi ini.");
+                return;
+            }
+
+            if (confirm("⚠️ PERHATIAN: Semua data (Habit & Journal) di device ini akan ditimpa. Lanjutkan?")) {
+                localStorage.clear(); // Bersihkan data lama agar tidak bentrok
+                for (const key in data) {
+                    localStorage.setItem(key, data[key]);
+                }
+                alert("Data berhasil diimpor!");
+                location.reload(); // Refresh untuk menerapkan data baru
+            }
+        } catch (err) {
+            alert("Error: Format file rusak.");
+        }
+    };
+    reader.readAsText(file);
+}
     </script>
 </body>
 </html>
